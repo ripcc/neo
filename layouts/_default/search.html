@@ -180,12 +180,14 @@
 
   // Wrap only the matched Twitter link
   function wrapTwitterLinks(text) {
-    const match = text.match(/https:\/\/twitter\.com\/[A-Za-z0-9_]+\/status\/\d+/);
-    if (match) {
-      return `<blockquote class="twitter-tweet" data-chrome="transparent"><a href="${match[0]}"></a></blockquote>`;
-    }
-    return "";
+  const match = text.match(/https:\/\/(twitter\.com|x\.com)\/[A-Za-z0-9_]+\/status\/\d+/);
+  if (match) {
+    const twitterUrl = match[0].replace('x.com', 'twitter.com');
+    return `<blockquote class="twitter-tweet" data-chrome="transparent"><a href="${twitterUrl}"></a></blockquote>`;
   }
+  return "";
+}
+
 
   let url = window.location.pathname.replace('/search/','')
   console.log(url+"/index.json")
