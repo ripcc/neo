@@ -235,8 +235,64 @@
     });
 
 
-  // Open the post content in a popup dialog
-  function openPostPopup(postUrl) {
+
+
+
+    function openPostPopup(postUrl) {
+  const postContent = document.getElementById("post-content");
+  postContent.setAttribute("data-post-url", postUrl); 
+  console.log(postUrl);
+  postContent.innerHTML = "<div class='loader'></div>"; // Show a loading message
+
+  fetch(postUrl)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Failed to load post: ${response.statusText}`);
+      }
+      return response.text();
+    })
+    .then(html => {
+      // Create a container
+      const wrapper = document.createElement("div");
+
+      // Create the link element
+      const link = document.createElement("a");
+      link.href = postUrl;
+      //link.target = "_blank";
+      //link.rel = "noopener noreferrer";
+      link.className = "view-full-post-link";
+      link.textContent = "View full post →";
+
+      // Insert the link and the rest of the content
+      wrapper.appendChild(link);
+
+      const contentDiv = document.createElement("div");
+      contentDiv.innerHTML = html;
+
+      wrapper.appendChild(contentDiv);
+
+      // Inject the final content
+      postContent.innerHTML = "";
+      postContent.appendChild(wrapper);
+
+      if (window.twttr) {
+        window.twttr.widgets.load();
+      }
+
+      cleanPostContent();
+    })
+    .catch(error => {
+      postContent.innerHTML = `<p>Error loading content: ${error.message}</p>`;
+    });
+
+  const dialog = document.getElementById("postModal");
+  dialog.showModal();
+}
+
+
+
+
+  function openPostPopup1(postUrl) {
     const postContent = document.getElementById("post-content");
     postContent.setAttribute("data-post-url", postUrl); 
     console.log(postUrl)
@@ -255,6 +311,7 @@
         console.log(html)
         postContent.innerHTML = html; // Inject the fetched HTML into the dialog
 
+
         if (window.twttr) {
           window.twttr.widgets.load();
         }
@@ -268,6 +325,7 @@
     const dialog = document.getElementById("postModal");
     dialog.showModal(); // Show the dialog
   }
+
 
   // Function to apply custom CSS or hide unwanted elements
   function cleanPostContent() {
