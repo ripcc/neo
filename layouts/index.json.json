@@ -1,0 +1,12 @@
+[
+    {{- $pages := where .Site.RegularPages "Type" "posts" -}}
+    {{- range $i, $p := $pages -}}{{- if $i }},{{ end }}
+      {
+        "id": {{ $p.Params.id | jsonify }},
+        "inResponseTo": {{ $p.Params.inResponseTo | jsonify }},
+        "question": {{ $p.Params.question | jsonify }},
+        "reply": {{ $p.Params.reply | jsonify }}
+      }
+    {{- end }}
+    ]
+    
