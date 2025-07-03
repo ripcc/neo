@@ -1,0 +1,4 @@
+{{/* layouts/shortcodes/include.html */}}
+{{ $file := .Get 0 }}
+{{ $content := readFile (printf "content/%s" $file) }}
+{{ $content | safeHTML }}

@@ -7,10 +7,94 @@
         <button onclick="window.history.back()">Go Back</button>
     </navigation>
     --->
-    {{ .Content }}
-
-
+    {{ .Content }} 
 
 </main>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+document.querySelectorAll('details').forEach(details => {
+  details.setAttribute('open', '');
+});
+
+const thread = document.querySelector('details.Thread');
+if (!thread) return;
+
+async function embedReplies(links) {
+  for (const link of links) {
+    try {
+      const response = await fetch(link.href);
+      if (!response.ok) throw new Error(`Failed to load ${link.href}`);
+
+      const htmlText = await response.text();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(htmlText, 'text/html');
+
+      const embeddedPost = doc.querySelector('details.Thread .Item');
+      if (!embeddedPost) continue;
+
+      const clone = embeddedPost.cloneNode(true);
+
+      const wrapper = document.createElement('div');
+      wrapper.classList.add('embedded-reply-wrapper');  // class only
+
+      const urlParts = new URL(link.href).pathname.split('/');
+      const replyID = urlParts[urlParts.length - 1] || link.href;
+
+      const label = document.createElement('div');
+      label.textContent = `Embedded reply from: ${replyID}`;
+      //label.textContent = `Embedded reply from post ID: ${replyID}`;
+      label.classList.add('embedded-reply-label');  // class only
+
+      wrapper.appendChild(label);
+      wrapper.appendChild(clone);
+
+      const firstItem = Array.from(thread.children).find(child => child.classList && child.classList.contains('Item'));
+
+      if (firstItem) {
+        thread.insertBefore(wrapper, firstItem);
+      } else {
+        thread.appendChild(wrapper);
+      }
+
+      const nestedLinks = wrapper.querySelectorAll('a.replyLink');
+      if (nestedLinks.length > 0) {
+        await embedReplies(nestedLinks);
+      }
+    } catch (error) {
+      console.error('Error embedding reply content:', error);
+    }
+  }
+}
+
+function sortEmbeddedRepliesByDate(thread) {
+  const wrappers = Array.from(thread.querySelectorAll('.embedded-reply-wrapper'));
+
+  wrappers.sort((a, b) => {
+    const dateAString = a.querySelector('.Reply header small')?.textContent || '';
+    const dateBString = b.querySelector('.Reply header small')?.textContent || '';
+
+    const dateA = new Date(dateAString);
+    const dateB = new Date(dateBString);
+
+    return dateA - dateB;
+  });
+
+  wrappers.reverse().forEach(wrapper => thread.prepend(wrapper));
+}
+
+const topLevelLinks = document.querySelectorAll('a.replyLink');
+embedReplies(topLevelLinks).then(() => {
+  sortEmbeddedRepliesByDate(thread);
+
+  if (window.twttr) {
+          window.twttr.widgets.load();
+        }
+});
+});
+
+</script>
+
 {{ end }}
 
