@@ -1,11 +1,13 @@
 [
     {{- $pages := where .Site.RegularPages "Type" "posts" -}}
     {{- range $i, $p := $pages -}}{{- if $i }},{{ end }}
-      {
-        "id": {{ $p.Params.id | jsonify }},
-        "inResponseTo": {{ $p.Params.inResponseTo | jsonify }},
-        "question": {{ $p.Params.question | jsonify }},
-        "reply": {{ $p.Params.reply | jsonify }}
+    {
+        "ask": {{ $p.Params.question | default "null" | jsonify }},
+        "date": {{ $p.Date.Format "2006-01-02" | jsonify }},
+        "link": {{ $p.Permalink | jsonify }},
+        "reply": {{ $p.Params.reply | default "null" | jsonify }},
+        "thread": {{ $p.Params.inResponseTo | default "null" | jsonify }},
+        "title": {{ $p.Title | default "" | jsonify }}
       }
     {{- end }}
     ]
