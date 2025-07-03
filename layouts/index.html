@@ -9,7 +9,6 @@
   <article class="PostWrapper">
 
     <div class="postHeader">
-    <!---  <span class="index">#{{ .Params.idx }}</span> -->
 
     <a class="index" href='{{ .RelPermalink }}'>
       #{{ .Params.idx }}
@@ -19,25 +18,13 @@
         <ion-icon name="copy-outline"></ion-icon>
       </a>
 
-      <!---
-      <a class="postURL" href='{{ .RelPermalink }}'>
-        <ion-icon name="open-outline"></ion-icon>
-      </a>
-
-      -->
-
        </div> 
 
     {{ .Content }}
 
   </article>
 {{ end }}
-   <!---
-<button onclick="topFunction()" id="myBtn" title="Go to top">
-  <ion-icon name="arrow-up-outline"></ion-icon>
-</button>
 
---->
 
 
 </main>
@@ -72,12 +59,12 @@ function copyLink(relativeLink) {
       console.error("Failed to copy link:", err);
     });
 }
-
-
-
+//{{ partial "pagination.html" $paginator }}
 
 
 </script>
+
+
 {{ template "_internal/pagination.html" . }}
 {{ end }}
 
