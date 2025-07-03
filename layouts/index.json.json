@@ -7,7 +7,7 @@
         "link": {{ $p.Permalink | jsonify }},
         "reply": {{ $p.Params.reply | default "null" | jsonify }},
         "thread": {{ $p.Params.inResponseTo | default "null" | jsonify }},
-        "title": {{ $p.Title | default "" | jsonify }}
+        "title": {{ $p.Params.timestamp | default "" | jsonify }}
       }
     {{- end }}
     ]
