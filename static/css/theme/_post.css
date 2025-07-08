@@ -59,13 +59,13 @@ main.Posts {
   
   .Post .Question header::before {
     background: var(--question-bg);
-    background-image: url(/requeefiem/images/q.jpg);
+    background-image: url(/cc/images/q.jpg);
     background-size: contain;
   }
   
   .Post .Reply header::before {
     background: var(--reply-bg);
-    background-image: url(/requeefiem/images/a.jpg);
+    background-image: url(/cc/images/a.jpg);
     background-size: contain;
   }
   
@@ -140,7 +140,7 @@ a.index {
     content: '';
     width: 18px;
     height: 6px;
- background: url('/requeefiem/images/arrow.svg') no-repeat;
+ background: url('/cc/images/arrow.svg') no-repeat;
      transition: 0.2s;
     opacity: 0.4;
   }
